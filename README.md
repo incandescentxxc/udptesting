@@ -12,3 +12,5 @@ udpPower.cpp is used. with the argument 0 being server, and 1 being client.
 client will send a packet to server. (Mark starting time) After server recives the packet, the server will send the packet back to the client. 
 After the client receives the packet (mark ending time), one iteration will be completed. The delay will be (ending time - starting time) /2.
 
+<strong> udplite.cpp is the updlite version of udpPower.cpp</strong>
+
