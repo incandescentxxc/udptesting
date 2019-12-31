@@ -66,6 +66,7 @@ typedef unsigned int SOCKET;
 
 #define BUFFER_SZ 1200
 #define SEND_BUF_LEN 512
+#define TIME_SCALE 100000000
 
 int server_port = 33456;
 int client_port = 33457;
@@ -251,6 +252,11 @@ int main(int argc, char *argv[]){
         }
         double jitter = tmpJitter/Send_num;
 
+        double dataSize = SEND_BUF_LEN * Send_num; // byte
+        
+        double sumInSecond = sum / TIME_SCALE;
+        double throughput = (dataSize / sumInSecond) / (1024 * 1024); // in Mb/s
+
         cout << "num: " << Send_num << endl;
         cout << "avg: " << avg << endl;
         cout << "min: " << min << endl;
@@ -259,6 +265,7 @@ int main(int argc, char *argv[]){
         cout << "std: " << std << endl;
         cout << "variance: " << variance << endl;
         cout << "sum: " << sum << endl;
+        cout << "throughput: " << throughput << "Mb/s" << endl;
     }
 
     return 0;
