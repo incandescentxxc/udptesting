@@ -71,9 +71,9 @@ typedef unsigned int SOCKET;
 int server_port = 33456;
 int client_port = 33457;
 
-const char* ServerIP = "127.0.0.1";
+const char* ServerIP = "192.168.2.188";
 
-int Send_num = 300000;
+int Send_num = 50000;
 
 const int RTT_LEN = 1000000;
 uint64_t *rtt = new uint64_t[RTT_LEN];

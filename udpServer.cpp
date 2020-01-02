@@ -45,7 +45,7 @@ int main(){
             break;
         }
     }
-    double rate = counter/1000000.0;
+    double rate = counter/50000.0;
     printf("The loss rate is %.6f",rate);
     close(sockSer);
     return 0;
