@@ -28,7 +28,8 @@ int main(){
         perror("bind error:");
     }
 
-    char recvbuf[30];
+    char recvbuf[128];
+    double lossRate[100000];
     int counter = 0;
     while(1){
         int recv_num = recvfrom(sockSer, recvbuf, sizeof(recvbuf), 0, (struct sockaddr*)&addrCli,(socklen_t *)&totalen);
@@ -36,17 +37,22 @@ int main(){
             perror("recv from error:");
             exit(1);
         }
-        recvbuf[recv_num] = '\0';
-        printf("Receive.\n");
+        recvbuf[recv_num] = '\0'; //forced to have a null terminator in the end
         printf("Server received %d bytes of data: %s\n", recv_num, recvbuf);
-        counter++;
         if(!strcmp(recvbuf,"Finish!")){
             printf("This is the last one!\n");
             break;
         }
+        counter ++;
+        int realNumRecv = atoi(recvbuf);
+        lossRate[counter-1] = counter/(double)realNumRecv*100;
+        printf("Counter number is %d\n", counter);
+        printf("Real time receving rate: %.4f%%\n",lossRate[counter-1]);
     }
-    double rate = counter/50000.0;
-    printf("The loss rate is %.6f",rate);
+    double rate = counter/1000.0; // percentage
+    printf("The counter is %d\n", counter);
+
+    printf("The receiving rate is %.4f%%\n",rate);
     close(sockSer);
     return 0;
     
