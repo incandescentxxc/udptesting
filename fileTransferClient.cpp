@@ -69,6 +69,8 @@ int udpSend(string fileName, char** buf){
     }
     
     cout << "Finish sending" << endl;
+    char* lastMsg = "Finish!";
+    int send_num = sendto(sockCli, lastMsg, sizeof(lastMsg), 0, (struct sockaddr*)&addrCli,totalen);
     close(sockCli);
     return 0;
 }
