@@ -28,7 +28,7 @@ int main(){
         perror("bind error:");
     }
 
-    char recvbuf[128];
+    char recvbuf[1400];
     double lossRate[100000];
     int counter = 0;
     while(1){
