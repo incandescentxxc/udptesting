@@ -23,6 +23,7 @@ int getBufNum(string fileName){
     return length;
 }
 
+//cut the file into pieces and store them in a 2d array
 char** scissors(string fileName) {
     int bufNum = getBufNum(fileName);
     char **buf = new char* [bufNum];
@@ -77,7 +78,7 @@ int udpSend(string fileName, char** buf){
 
 
 int main(){
-    char **contents = scissors("Videos tested/Trail2_110M.mp4");
-    udpSend("Videos tested/Trail2_110M.mp4", contents);
+    char **contents = scissors("Videos tested/Trial1_55M.mp4");
+    udpSend("Videos tested/Trial1_55M.mp4", contents);
     
 }
