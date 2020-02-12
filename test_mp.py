@@ -5,7 +5,7 @@ import time
 import csv
 def run_flow(rate, mode):
 	
-	NIC1ip = '192.168.1.45' # server IP
+	NIC1ip = '192.168.1.47' # server IP
 	LOClip = '192.168.1.199'
 	NIC1 = 'ens33' # sending Interface 
 	target_NIC = 'ens33' # modifying interface 
@@ -14,15 +14,16 @@ def run_flow(rate, mode):
 	if(mode == 0):# udp
 		outputVideoName = 'udpvideo' + str(rate) + '.mp4'
 		outputStatsName = 'udppsnr' + str(rate) + '.log'
-		cmd_exec_remote_server = 'ssh incandescentxxc@' + NIC1ip + ' ffmpeg -f h264 -i udp://192.168.1.45:8000?timeout=15000000 '+outputVideoName
+		cmd_exec_remote_server = 'ssh incandescentxxc@' + NIC1ip + ' ffmpeg -f h264 -i udp://192.168.1.47:8000?timeout=7000000 '+outputVideoName
 
 	else: # udplite
 		outputVideoName = 'udplitevideo' + str(rate) + '.mp4'
 		outputStatsName = 'udplitepsnr' + str(rate) + '.log'
-		cmd_exec_remote_server = 'ssh incandescentxxc@' + NIC1ip + ' ffmpeg -f h264 -i udplite://192.168.1.45:8000?timeout=15000000 '+outputVideoName
+		cmd_exec_remote_server = 'ssh incandescentxxc@' + NIC1ip + ' ffmpeg -f h264 -i udplite://192.168.1.47:6000?timeout=7000000 '+outputVideoName
 
-	cmd_cal_remote_server = 'ssh incandescentxxc@' + NIC1ip + ' ffmpeg -i video_480.mp4 -i '+ outputVideoName + ' -lavfi psnr="stats_file=psnr.log" -f null -'
+	cmd_cal_remote_server = 'ssh incandescentxxc@' + NIC1ip + ' ffmpeg -i video360p.mp4 -i '+ outputVideoName + ' -lavfi psnr="stats_file=psnr.log" -f null -'
 	cmd_getFPS_remote_server = 'ssh incandescentxxc@' + NIC1ip + ' ffprobe -v error -count_frames -select_streams v:0 -show_entries stream=nb_read_frames -of default=nokey=1:noprint_wrappers=1 ' + outputVideoName + ' > numberFrame.txt'
+	cmd_rm_remote_server = 'ssh incandescentxxc@' + NIC1ip + ' rm ' + outputVideoName
 	cmd_tran_remote_server = 'scp incandescentxxc@' + NIC1ip + ':psnr.log '+outputStatsName
 	
 	# flow starts here
@@ -31,14 +32,16 @@ def run_flow(rate, mode):
 	remote_server_exec = subprocess.Popen(cmd_exec_remote_server, shell=True, stdout=subprocess.PIPE)
 	time.sleep(6) # wait for the server to start listening
 	if(mode == 0): # udp
-		os.system("ffmpeg -re -i video_480.mp4 -f h264 udp://192.168.1.45:8000")
+		os.system("ffmpeg -re -i video360p.mp4 -f h264 udp://192.168.1.47:8000")
 	else: #udplite
-		os.system("ffmpeg -re -i video_480.mp4 -f h264 udplite://192.168.1.45:8000")
+		os.system("ffmpeg -re -i video360p.mp4 -f h264 udplite://192.168.1.47:8000")
 	remote_server_exec.wait()
 	remote_server_cal = subprocess.Popen(cmd_cal_remote_server, shell=True, stdout=subprocess.PIPE) # calculate psnr
 	remote_server_cal.wait()
 	remote_server_fps = subprocess.Popen(cmd_getFPS_remote_server, shell=True, stdout=subprocess.PIPE) # get the number of frames
 	remote_server_fps.wait()
+	remote_server_rm = subprocess.Popen(cmd_rm_remote_server, shell=True, stdout=subprocess.PIPE) # remove the video sent
+	remote_server_rm.wait()
 	remote_server_tra = subprocess.Popen(cmd_tran_remote_server, shell=True, stdout=subprocess.PIPE)
 	remote_server_tra.wait()
 	if(rate != 0):
@@ -46,6 +49,7 @@ def run_flow(rate, mode):
 	
 
 def run_exp(rate, mode):
+	
 	run_flow(rate, mode)
 	# TODO write to the file
 	if(mode ==0):
@@ -84,9 +88,13 @@ def run_exp(rate, mode):
 if __name__ == "__main__":
 	udpDict = {}
 	udpLiteDict = {}
-	for bit_error in [1]:
-		udpDict[str(bit_error)] = run_exp(bit_error, 0)
-		udpLiteDict[str(bit_error)] = run_exp(bit_error, 1)
+	for bit_error in [0,0.4,0.5,0.6,0.7,1,1.5,2]:
+		udppsnr1 = run_exp(bit_error, 0)
+		udppsnr2 = run_exp(bit_error, 0)
+		udpDict[str(bit_error)] = (udppsnr1 + udppsnr2)/2
+		udplitepsnr1 = run_exp(bit_error, 1)
+		udplitepsnr2 = run_exp(bit_error, 1)
+		udpLiteDict[str(bit_error)] = (udplitepsnr1 + udplitepsnr2)/2
 	
 	print("UDP: \n")
 	print(udpDict)
