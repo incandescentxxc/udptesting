@@ -65,7 +65,7 @@ int udpSend(string fileName, char** buf, int mode){
     memset(&addrCli, 0, sizeof(addrCli));
     addrCli.sin_family = AF_INET;
     addrCli.sin_port = htons(DEST_PORT);
-    addrCli.sin_addr.s_addr = inet_addr("192.168.1.42");
+    addrCli.sin_addr.s_addr = inet_addr("192.168.1.54");
     int totalen = sizeof(struct sockaddr_in);
 
 
@@ -81,7 +81,7 @@ int udpSend(string fileName, char** buf, int mode){
                 perror("sendto error:");
                 exit(1);
         }
-        sleep(0.001);// wait one millisecond
+        // sleep(0.001);// wait one millisecond
     }
     
     cout << "Finish sending" << endl;

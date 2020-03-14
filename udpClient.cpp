@@ -34,7 +34,7 @@ int main(){
     memset(&addrCli, 0, sizeof(addrCli));
     addrCli.sin_family = AF_INET;
     addrCli.sin_port = htons(DEST_PORT);
-    addrCli.sin_addr.s_addr = inet_addr("192.168.1.42");
+    addrCli.sin_addr.s_addr = inet_addr("192.168.1.54");
     int totalen = sizeof(struct sockaddr_in);
 
 
@@ -42,10 +42,10 @@ int main(){
 
     
     int counter = 1;
-    while(counter <= 100000){
+    while(counter <= 150000){
         //send every 10ms
         // sigwait(&alarm_sig, &signum); /* wait until the next signal */
-        if(counter== 100000){
+        if(counter== 150000){
             char newbuf[1400] = "Finish!";
             printf("Client sends: %s\n", newbuf);
             int send_num;
