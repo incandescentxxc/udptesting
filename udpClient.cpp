@@ -55,7 +55,7 @@ int main(){
                 exit(1);
             }
         }
-        else if (counter == 100000) {
+        else if (counter == 50000 ||counter ==  50001 ||counter ==  50002) {
             char newbuf[1400] = "Change";
             printf("Change server buffer size\n");
             int send_sum;

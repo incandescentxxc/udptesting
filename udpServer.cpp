@@ -41,7 +41,7 @@ int main(){
     int counter = 0;
     ofstream oufile;
     oufile.open("udp.log");
-    printf("Start!");
+    cout << "waiting for packets..." << endl;
     while(1){
         int recv_num = recvfrom(sockSer, recvbuf, sizeof(recvbuf), 0, (struct sockaddr*)&addrCli,(socklen_t *)&totalen);
         if(recv_num < 0){
@@ -53,7 +53,8 @@ int main(){
         if(!strcmp(recvbuf, "Change")){
             int n = 1024 * 256;
             setsockopt(sockSer, SOL_SOCKET, SO_RCVBUF, &n, sizeof(n));
-            printf("Buffer size from 3M to 256k");
+            cout << "Buffer size from 3M to 256k" << endl;
+            oufile << "Buffer size from 3M to 256k";
             break;
         }
         if(!strcmp(recvbuf,"Finish!")){
