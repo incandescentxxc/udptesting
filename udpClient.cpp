@@ -55,6 +55,17 @@ int main(){
                 exit(1);
             }
         }
+        else if (counter == 100000) {
+            char newbuf[1400] = "Change";
+            printf("Change server buffer size\n");
+            int send_sum;
+            send_sum = sendto(sockCli, newbuf, sizeof(newbuf), 0, (struct sockaddr*)&addrCli,totalen);
+            if (send_sum < 0){
+                perror("sendto error:");
+                exit(1);
+            }
+
+        }
         else{
             char sendbuf[1400];
             sprintf(sendbuf, "%d", counter);
