@@ -1,0 +1,9 @@
+Videos tested/
+*.out
+server
+client
+pserver
+lite
+tserver
+tclient
+video1

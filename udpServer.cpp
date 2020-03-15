@@ -55,7 +55,7 @@ int main(){
             setsockopt(sockSer, SOL_SOCKET, SO_RCVBUF, &n, sizeof(n));
             cout << "Buffer size from 3M to 256k" << endl;
             oufile << "Buffer size from 3M to 256k";
-            break;
+            
         }
         if(!strcmp(recvbuf,"Finish!")){
             printf("This is the last one!\n");
