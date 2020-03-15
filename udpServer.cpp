@@ -5,6 +5,11 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include<stdlib.h>
+# include <iostream>
+# include <fstream>
+# include <bitset>
+using namespace std;
+
 #define SERV_PORT 8000
 int main(){
     // create file descriptor. declare IPv4, UDP protocol
@@ -31,6 +36,8 @@ int main(){
     char recvbuf[1400];
     double lossRate[100000];
     int counter = 0;
+    ofstream oufile;
+    oufile.open("udp.log");
     while(1){
         int recv_num = recvfrom(sockSer, recvbuf, sizeof(recvbuf), 0, (struct sockaddr*)&addrCli,(socklen_t *)&totalen);
         if(recv_num < 0){
@@ -38,17 +45,20 @@ int main(){
             exit(1);
         }
         recvbuf[recv_num] = '\0'; //forced to have a null terminator in the end
-        printf("Server received %d bytes of data: %s\n", recv_num, recvbuf);
+        // printf("Server received %d bytes of data: %s\n", recv_num, recvbuf);
         if(!strcmp(recvbuf,"Finish!")){
             printf("This is the last one!\n");
             break;
         }
         counter ++;
         int realNumRecv = atoi(recvbuf);
-        lossRate[counter-1] = counter/(double)realNumRecv*100;
-        printf("Counter number is %d\n", counter);
-        printf("Real time receving rate: %.4f%%\n",lossRate[counter-1]);
+        string serial = to_string(realNumRecv)  + "\n";
+        // lossRate[counter-1] = counter/(double)realNumRecv*100;
+        oufile << serial;
+        // printf("Counter number is %d\n", counter);
+        // printf("Real time receving rate: %.4f%%\n",lossRate[counter-1]);
     }
+    oufile.close();
     double rate = counter/1000.0; // percentage
     printf("The counter is %d\n", counter);
 
