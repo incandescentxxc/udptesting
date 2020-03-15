@@ -32,12 +32,16 @@ int main(){
     if (res == -1){
         perror("bind error:");
     }
+    // change buffer size to 3M
+    int n = 1024 * 1024 * 3;
+    setsockopt(sockSer, SOL_SOCKET, SO_RCVBUF, &n, sizeof(n));
 
     char recvbuf[1400];
     double lossRate[100000];
     int counter = 0;
     ofstream oufile;
     oufile.open("udp.log");
+    printf("Start!");
     while(1){
         int recv_num = recvfrom(sockSer, recvbuf, sizeof(recvbuf), 0, (struct sockaddr*)&addrCli,(socklen_t *)&totalen);
         if(recv_num < 0){
@@ -46,6 +50,12 @@ int main(){
         }
         recvbuf[recv_num] = '\0'; //forced to have a null terminator in the end
         // printf("Server received %d bytes of data: %s\n", recv_num, recvbuf);
+        if(!strcmp(recvbuf, "Change")){
+            int n = 1024 * 256;
+            setsockopt(sockSer, SOL_SOCKET, SO_RCVBUF, &n, sizeof(n));
+            printf("Buffer size from 3M to 256k");
+            break;
+        }
         if(!strcmp(recvbuf,"Finish!")){
             printf("This is the last one!\n");
             break;
@@ -59,7 +69,7 @@ int main(){
         // printf("Real time receving rate: %.4f%%\n",lossRate[counter-1]);
     }
     oufile.close();
-    double rate = counter/1000.0; // percentage
+    double rate = counter/1500.0; // percentage
     printf("The counter is %d\n", counter);
 
     printf("The receiving rate is %.4f%%\n",rate);
