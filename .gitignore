@@ -1,12 +1,5 @@
-Videos tested/
-.vscode/
-.ipynb_checkpoints/
-*.out
-server
-client
-pserver
-lite
-tserver
-tclient
-video1
-.ipynb
+*
+!*.c
+!*.cpp
+!*.py
+!.gitignore
