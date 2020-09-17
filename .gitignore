@@ -1,4 +1,6 @@
 Videos tested/
+.vscode/
+.ipynb_checkpoints/
 *.out
 server
 client
@@ -7,3 +9,4 @@ lite
 tserver
 tclient
 video1
+.ipynb
