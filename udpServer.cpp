@@ -33,14 +33,14 @@ int main(){
         perror("bind error:");
     }
     // change buffer size to 3M
-    int n = 1024 * 1024 * 3;
+    int n = 1024 * 1024 * 5;
     setsockopt(sockSer, SOL_SOCKET, SO_RCVBUF, &n, sizeof(n));
 
     char recvbuf[1400];
     double lossRate[100000];
     int counter = 0;
     ofstream oufile;
-    oufile.open("udp.log");
+    oufile.open("udp5M.log");
     cout << "waiting for packets..." << endl;
     while(1){
         int recv_num = recvfrom(sockSer, recvbuf, sizeof(recvbuf), 0, (struct sockaddr*)&addrCli,(socklen_t *)&totalen);
@@ -51,10 +51,9 @@ int main(){
         recvbuf[recv_num] = '\0'; //forced to have a null terminator in the end
         // printf("Server received %d bytes of data: %s\n", recv_num, recvbuf);
         if(!strcmp(recvbuf, "Change")){
-            int n = 1024 * 256;
+            int n = 1024 * 1;
             setsockopt(sockSer, SOL_SOCKET, SO_RCVBUF, &n, sizeof(n));
-            cout << "Buffer size from 3M to 256k" << endl;
-            oufile << "Buffer size from 3M to 256k";
+            cout << "Buffer size from 5M to 1k" << endl;
             
         }
         if(!strcmp(recvbuf,"Finish!")){
