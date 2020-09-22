@@ -49,7 +49,7 @@ int main(int argc, char *argv[]){
         gettimeofday(&t2, NULL);
         if((packetsent % 1000) == 0){
             printf("Client sends: %s\n", send_buf);
-            usleep(100);
+            usleep(1000);
         }
     }
     close(sockCli);
