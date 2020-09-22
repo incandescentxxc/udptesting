@@ -31,13 +31,6 @@ int main(int argc, char *argv[]){
 
     socklen_t addrlen = sizeof(struct sockaddr);
 
-    //Bind
-    if( bind(sockCli ,(struct sockaddr *)&addrCli , addrlen) == -1)
-    {
-        perror("Client socket bind failed\n");
-        return 0;
-    }
-
     if(argc != 1){
         duration = atoi(argv[1]); // in second
     }
