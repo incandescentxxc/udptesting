@@ -18,10 +18,10 @@ def run_flow(loss_rate, cor_rate, mode):
     LOCNIC = 'ens33'
 
     if(mode == 0):#udp
-        cmd_remote_server_start = 'ssh xxc@' + NIC1ip + ' cd ./udptesting &&./udpserver 10'
-        cmd_local_addmask = 'sudo tc qdisc add dev ' + NIC1 + ' root netem loss ' + str(loss_rate)
-        cmd_local_cancelmask = 'ssh xxc@' + NIC1ip + ' sudo tc qdisc del dev ' + NIC1+ ' root'
-        cmd_local_cli_send = 'ssh xxc@' + NIC1ip + ' ./udpclient 11'
+        cmd_remote_server_start = 'ssh xxc@' + NIC1ip + ' \"cd ./udptesting && ./udpserver 10\"'
+        cmd_local_addmask = 'sudo tc qdisc add dev ' + LOCNIC + ' root netem loss ' + str(loss_rate)
+        cmd_local_cancelmask = 'sudo tc qdisc del dev ' + LOCNIC+ ' root'
+        cmd_local_cli_send = './udpclient 11'
 
     #flow starts
     
@@ -29,7 +29,7 @@ def run_flow(loss_rate, cor_rate, mode):
         os.system(cmd_local_addmask)
     thread_remote = myThread(cmd_remote_server_start)
     thread_remote.start()
-    time.sleep(5)
+    time.sleep(1)
     os.system(cmd_local_cli_send)
     if(loss_rate != 0):
         os.system(cmd_local_cancelmask)
