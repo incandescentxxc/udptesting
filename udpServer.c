@@ -68,6 +68,7 @@ int main(int argc, char *argv[]){
         printf("loss rate is %.4lf%%\n",loss_rate[i]);
         acc += loss_rate[i];
     }
+    free(loss_rate);
     double aver_loss_rate = acc/num_data;
 
     printf("The average loss rate is %.4lf%%\n",aver_loss_rate);
