@@ -41,7 +41,7 @@ int main(int argc, char *argv[]){
     float interval = 0.1; // sampling interval
     int num_data = (int) duration / interval;
     char recvbuf[RECV_UNIT];
-    double *loss_rate = (double *) malloc(num_data*sizeof(double));
+    double *loss_rate = (double *) malloc(num_data*sizeof(double) + 100);
     int count = 0;
     int counter_data = 0;
     gettimeofday(&t1, NULL);
