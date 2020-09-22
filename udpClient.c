@@ -36,11 +36,10 @@ int main(int argc, char *argv[]){
     }
     gettimeofday(&t1, NULL);
     gettimeofday(&t2, NULL);
-    int counter = 1;
+    int packetsent = 0;
     while(t2.tv_sec - t1.tv_sec <= duration){
         char send_buf[SEND_UNIT];
-        sprintf(send_buf, "%d", counter++); // store integer to the buffer
-        printf("Client sends: %s\n", send_buf);
+        sprintf(send_buf, "%d", ++packetsent); // store integer to the buffer
         int send_num;
         send_num = sendto(sockCli, send_buf, sizeof(send_buf), 0, (struct sockaddr*)&addrCli,totalen);
         if (send_num < 0){
@@ -48,6 +47,10 @@ int main(int argc, char *argv[]){
             exit(1);
         }
         gettimeofday(&t2, NULL);
+        if((packetsent % 1000) == 0){
+            printf("Client sends: %s\n", send_buf);
+            usleep(100);
+        }
     }
     close(sockCli);
     return 0;
