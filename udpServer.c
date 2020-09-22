@@ -53,7 +53,8 @@ int main(int argc, char *argv[]){
         int recv_num = recvfrom(sockSer, recvbuf, sizeof(recvbuf), 0, (struct sockaddr*)&addrCli,(socklen_t *)&totalen);
         if(!init_flag){ // after receiving the first packet, set the starting time formally
             init_flag = 1;
-            printf("recv!\n");
+            num_recv = atoi(recvbuf);
+            printf("recv! %d\n", num_recv);
             gettimeofday(&t1, NULL);
         }
         if(recv_num < 0){
