@@ -48,10 +48,12 @@ int main(int argc, char *argv[]){
     gettimeofday(&t2, NULL);
     int init_flag = 0;
     int num_recv;
+    printf("Server: starting to listen!\n");
     while(t2.tv_sec - t1.tv_sec <= duration){
         int recv_num = recvfrom(sockSer, recvbuf, sizeof(recvbuf), 0, (struct sockaddr*)&addrCli,(socklen_t *)&totalen);
         if(!init_flag){ // after receiving the first packet, set the starting time formally
             init_flag = 1;
+            printf("recv!\n");
             gettimeofday(&t1, NULL);
         }
         if(recv_num < 0){
@@ -64,21 +66,24 @@ int main(int argc, char *argv[]){
         if(t2.tv_sec - t1.tv_sec >= counter_data * interval){ //100ms
             num_recv = atoi(recvbuf);
             loss_rate[counter_data++] = (1- count/(double)num_recv)*100;
-            printf("packet number is %d, count number is %d\n", num_recv, count);
+            // printf("packet number is %d, count number is %d\n", num_recv, count);
         }
-
     }
     close(sockSer);
     // get average loss rate
     double acc;
     for(int i = 0; i < num_data; i++){
-        printf("loss rate is %.4lf%%\n",loss_rate[i]);
+        // printf("loss rate is %.4lf%%\n",loss_rate[i]);
         acc += loss_rate[i];
     }
     free(loss_rate);
     double aver_loss_rate = acc/num_data;
 
-    printf("The average loss rate is %.4lf%%\n",aver_loss_rate);
+    FILE *fp;
+    fp =  fopen("test.txt", "a");
+    fprintf(fp, "Average loss rate is %.4lf%%\n", aver_loss_rate);
+    fclose(fp);
+    // printf("The average loss rate is %.4lf%%\n",aver_loss_rate);
     
     return 0;
     

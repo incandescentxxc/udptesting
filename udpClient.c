@@ -26,7 +26,7 @@ int main(int argc, char *argv[]){
     memset(&addrCli, 0, sizeof(addrCli));
     addrCli.sin_family = AF_INET;
     addrCli.sin_port = htons(DEST_PORT);
-    addrCli.sin_addr.s_addr = inet_addr("172.20.26.31");
+    addrCli.sin_addr.s_addr = inet_addr("172.16.33.29");
     int totalen = sizeof(struct sockaddr_in);
 
     socklen_t addrlen = sizeof(struct sockaddr);
