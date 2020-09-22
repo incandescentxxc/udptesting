@@ -43,23 +43,30 @@ int main(int argc, char *argv[]){
     char recvbuf[RECV_UNIT];
     double *loss_rate = (double *) malloc(num_data*sizeof(double));
     int count = 0;
-    int counter_data = 1;
+    int counter_data = 0;
     gettimeofday(&t1, NULL);
     gettimeofday(&t2, NULL);
+    int init_flag = 0;
     int num_recv;
     while(t2.tv_sec - t1.tv_sec <= duration){
         int recv_num = recvfrom(sockSer, recvbuf, sizeof(recvbuf), 0, (struct sockaddr*)&addrCli,(socklen_t *)&totalen);
+        if(!init_flag){ // after receiving the first packet, set the starting time formally
+            init_flag = 1;
+            gettimeofday(&t1, NULL);
+        }
         if(recv_num < 0){
             perror("recv from error:");
             exit(1);
         }
-        gettimeofday(&t2, NULL);
-        if(t2.tv_sec - t1.tv_sec >= counter_data * counter_data){ //100ms
-            num_recv = atoi(recvbuf);
-            loss_rate[counter_data - 1] = count/(double)num_recv*100;
-            counter_data++;
-        }
         count++;
+        gettimeofday(&t2, NULL);
+        // for every interval, records the data
+        if(t2.tv_sec - t1.tv_sec >= counter_data * interval){ //100ms
+            num_recv = atoi(recvbuf);
+            loss_rate[counter_data++] = (1- count/(double)num_recv)*100;
+            printf("packet number is %d, count number is %d\n", num_recv, count);
+        }
+
     }
     close(sockSer);
     // get average loss rate
