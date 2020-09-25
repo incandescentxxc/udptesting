@@ -11,7 +11,7 @@
 
 int main(int argc, char *argv[]){
     struct timeval t1,t2;
-    int duration = 5; // in default 5s
+    int duration = 2; // in default 2s
     // create file descriptor. declare IPv4, UDP protocol
     int sockSer = socket(AF_INET, SOCK_DGRAM, 0);
     if(sockSer == -1){

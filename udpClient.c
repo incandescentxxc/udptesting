@@ -14,7 +14,7 @@ int main(int argc, char *argv[]){
 
     struct timeval t1, t2;
     double elapsedTime;
-    int duration = 10; // in default set it to 10s
+    int packets_to_send = 100000; // in default set it to 100000
 
     int sockCli = socket(AF_INET, SOCK_DGRAM, 0);
     if(sockCli == -1){
@@ -32,12 +32,12 @@ int main(int argc, char *argv[]){
     socklen_t addrlen = sizeof(struct sockaddr);
 
     if(argc != 1){
-        duration = atoi(argv[1]); // in second
+        packets_to_send = atoi(argv[1]); // in packet number
     }
     gettimeofday(&t1, NULL);
-    gettimeofday(&t2, NULL);
     int packetsent = 0;
-    while(t2.tv_sec - t1.tv_sec <= duration){
+    while(packetsent < packets_to_send){
+        //TODO - Header modification needed
         char send_buf[SEND_UNIT];
         sprintf(send_buf, "%d", ++packetsent); // store integer to the buffer
         int send_num;
@@ -46,12 +46,14 @@ int main(int argc, char *argv[]){
             perror("sendto error:");
             exit(1);
         }
-        gettimeofday(&t2, NULL);
         if((packetsent % 1000) == 0){
             printf("Client sends: %s\n", send_buf);
             usleep(1000);
         }
     }
     close(sockCli);
+    gettimeofday(&t2, NULL);
+    int duration = 1000000*(t2.tv_sec - t1.tv_sec) + (t2.tv_usec-t1.tv_usec);
+    printf("The duration of sending packets lasts %.4fs\n", (float)duration/1000000);
     return 0;
 }
