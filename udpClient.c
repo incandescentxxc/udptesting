@@ -7,7 +7,7 @@
 #include <sys/socket.h>
 #include "iperf_time.h"
 #define DEST_PORT 8000
-#define SEND_UNIT 1200 // length of packets sent
+#define SEND_UNIT 1024 // length of packets sent
 
 // sending a series of packets that are numbered within certain duration
 int main(int argc, char *argv[])
@@ -18,6 +18,7 @@ int main(int argc, char *argv[])
     int num_streams = 10;
 
     // connect
+    char* server_addr = "172.16.33.29";
     int sockCli = socket(AF_INET, SOCK_DGRAM, 0);
     if (sockCli == -1)
     {
@@ -27,11 +28,11 @@ int main(int argc, char *argv[])
     memset(&addrCli, 0, sizeof(addrCli));
     addrCli.sin_family = AF_INET;
     addrCli.sin_port = htons(DEST_PORT);
-    addrCli.sin_addr.s_addr = inet_addr("172.20.1.31");
+    addrCli.sin_addr.s_addr = inet_addr(server_addr);
     int totalen = sizeof(struct sockaddr_in);
 
     socklen_t addrlen = sizeof(struct sockaddr);
-    printf("Client: Connects to 172.16.33.29\n");
+    printf("Client: Connects to %s\n", server_addr);
     printf("Sending unit: %d\n", SEND_UNIT);
 
     if (argc != 1)
@@ -68,7 +69,6 @@ int main(int argc, char *argv[])
                 memcpy(send_buf + 8, &usec, sizeof(usec));
                 memcpy(send_buf + 12, &pcount, sizeof(pcount));
                 memset(send_buf + 16, 0, SEND_UNIT - 16);
-                usleep(10);
                 r = sendto(sockCli, send_buf, sizeof(send_buf), 0, (struct sockaddr *)&addrCli, totalen);
                 if (r < 0)
                 {

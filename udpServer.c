@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include "iperf_time.h"
 #define SERV_PORT 8000
-#define RECV_UNIT 1200 // length of packets sent
+#define RECV_UNIT 1024 // length of packets sent
 
 int main(int argc, char *argv[])
 {
@@ -156,7 +156,7 @@ int main(int argc, char *argv[])
     // fp = fopen("test.txt", "a");
     // fprintf(fp, "Average loss rate is %.4lf%%\n", aver_loss_rate);
     // fclose(fp);
-    printf("Server: The average loss rate is %.4lf%%\n", aver_loss_rate);
+    printf("Server: The average loss rate is %.4lf\n", aver_loss_rate);
 
     //cleanup
     free(first_packet);
