@@ -163,7 +163,7 @@ int main(int argc, char *argv[])
     free(packets_count);
     free(loss_num);
     free(out_of_order_pkt_num);
-    freee(counter);
+    free(counter);
     free(bytes_received);
     free(acc_delay);
 
