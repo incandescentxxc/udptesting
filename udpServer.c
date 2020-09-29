@@ -51,13 +51,14 @@ int main(int argc, char *argv[])
     iperf_time_now(&arrival_time);
     iperf_time_diff(&arrival_time, &first_arr_time, &temp_time);
     int stream_id = 1;
-    int *first_packet = (int *)malloc(num_streams * sizeof(int));
+    int *first_packet = (int *)malloc(num_streams * sizeof(int)); // indicate whether first packet has been recv for each stream
     int *packets_count = (int *)malloc(num_streams * sizeof(int)); // highest number received so far
-    int *loss_num = (int *)malloc(num_streams * sizeof(int));
-    int *out_of_order_pkt_num = (int *)malloc(num_streams * sizeof(int));
-    int *counter = (int *)malloc(num_streams * sizeof(int));
-    int *bytes_received = (int *)malloc(num_streams * sizeof(int));
-    double *acc_delay = (double *)malloc(num_streams * sizeof(double));
+    int *loss_num = (int *)malloc(num_streams * sizeof(int)); // lost packet in each stream
+    int *out_of_order_pkt_num = (int *)malloc(num_streams * sizeof(int)); 
+    int *counter = (int *)malloc(num_streams * sizeof(int)); // total recv packets in each stream
+    int *bytes_received = (int *)malloc(num_streams * sizeof(int)); // total amount of data recv
+    /* this delay needs sync clock, but not needed for now*/
+    double *acc_delay = (double *)malloc(num_streams * sizeof(double)); // total delay accumulated for each stream
     for (int i = 0; i < num_streams; i++)
     {
         first_packet[i] = 0;
@@ -68,13 +69,20 @@ int main(int argc, char *argv[])
         bytes_received[i] = 0;
         acc_delay[i] = 0;
     }
+                if (stream_id == 1) // set timeout for the recv socket
+            {
+                struct timeval timeout;
+                timeout.tv_sec = 5; // in default 5s
+                timeout.tv_usec = 0;
+                setsockopt(sockSer, SOL_SOCKET, SO_RCVTIMEO, (const char *)&timeout, sizeof(timeout));
+            }
     printf("Server starts, packet size %d\n", RECV_UNIT);
     while (1)
     {
         int r = recvfrom(sockSer, recvbuf, sizeof(recvbuf), 0, (struct sockaddr *)&addrCli, (socklen_t *)&totalen);
         if (r < 0)
         {
-            if (r == EWOULDBLOCK) // if socket waiting is timeout
+            if (errno == EAGAIN) // if socket waiting is timeout
             {
                 break;
             }
@@ -90,13 +98,8 @@ int main(int argc, char *argv[])
         memcpy(&pcount, recvbuf + 12, sizeof(pcount));
         if (bytes_received[stream_id - 1] == 0)
         {
-            if (stream_id == 1) // set timeout after receiving the first packet
-            {
-                struct timeval timeout;
-                timeout.tv_sec = 5;
-                timeout.tv_usec = 0;
-                setsockopt(sockSer, SOL_SOCKET, SO_RCVTIMEO, (const char *)&timeout, sizeof(timeout));
-            }
+
+            printf("stream id %d\n", stream_id);
             iperf_time_now(&first_arr_time);
             first_packet[stream_id - 1] = 1;
         }
