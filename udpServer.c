@@ -40,7 +40,9 @@ int main(int argc, char *argv[])
 
     char recvbuf[RECV_UNIT];
     int first_packet = 0;
-    int packets_count = 0;
+    int packets_count = 0; // highest number received so far
+    int loss_num = 0;
+    int out_of_order_pkt_num = 0;
     uint32_t sec, usec, pcount;
     uint64_t bytes_received, acc_delay;
     struct iperf_time sent_time, arrival_time, temp_time, first_arr_time;
@@ -60,7 +62,6 @@ int main(int argc, char *argv[])
             iperf_time_now(&first_arr_time);
             first_packet = 1;
         }
-        packets_count++;
         bytes_received += r;
         memcpy(&sec, recvbuf, sizeof(sec));
         memcpy(&usec, recvbuf + 4, sizeof(usec));
@@ -73,17 +74,48 @@ int main(int argc, char *argv[])
         iperf_time_now(&arrival_time);
         iperf_time_diff(&arrival_time, &sent_time, &temp_time);
         acc_delay += iperf_time_in_usecs(&temp_time);
+
+        if (pcount >= packets_count + 1)
+        {
+
+            /* Forward, but is there a gap in sequence numbers? */
+            if (pcount > packets_count + 1)
+            {
+                /* There's a gap so count that as a loss. */
+                loss_num += (pcount - 1) - packets_count;
+            }
+            /* Update the highest sequence number seen so far. */
+            packets_count = pcount;
+        }
+        else
+        {
+
+            /* 
+	     * Sequence number went backward (or was stationary?!?).
+	     * This counts as an out-of-order packet.
+	     */
+            out_of_order_pkt_num++;
+
+            /*
+	     * If we have lost packets, then the fact that we are now
+	     * seeing an out-of-order packet offsets a prior sequence
+	     * number gap that was counted as a loss.  So we can take
+	     * away a loss.
+	     */
+            if (loss_num > 0)
+                loss_num--;
+        }
     }
     close(sockSer);
     // get average loss rate
-    
-    double aver_loss_rate = packets_count / 10000;
 
-    FILE *fp;
-    fp = fopen("test.txt", "a");
-    fprintf(fp, "Average loss rate is %.4lf%%\n", aver_loss_rate);
-    fclose(fp);
-    // printf("The average loss rate is %.4lf%%\n",aver_loss_rate);
+    double aver_loss_rate = loss_num / packets_count;
+
+    // FILE *fp;
+    // fp = fopen("test.txt", "a");
+    // fprintf(fp, "Average loss rate is %.4lf%%\n", aver_loss_rate);
+    // fclose(fp);
+    printf("Server: There are %d out-of-order packets,\n The average loss rate is %.4lf%%\n",out_of_order_pkt_num,aver_loss_rate);
 
     return 0;
 }
