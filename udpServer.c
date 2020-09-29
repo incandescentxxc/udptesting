@@ -11,7 +11,7 @@
 
 int main(int argc, char *argv[])
 {
-    int df_duration = 3; // in default 3s
+    int df_duration = 5; // in default 3s
     // create file descriptor. declare IPv4, UDP protocol
     int sockSer = socket(AF_INET, SOCK_DGRAM, 0);
     if (sockSer == -1)
@@ -49,6 +49,7 @@ int main(int argc, char *argv[])
     iperf_time_now(&first_arr_time);
     iperf_time_now(&arrival_time);
     iperf_time_diff(&arrival_time, &first_arr_time, &temp_time);
+    int count = 0;
     while (iperf_time_in_secs(&temp_time) < df_duration)
     {
         int r = recvfrom(sockSer, recvbuf, sizeof(recvbuf), 0, (struct sockaddr *)&addrCli, (socklen_t *)&totalen);
@@ -83,9 +84,11 @@ int main(int argc, char *argv[])
             {
                 /* There's a gap so count that as a loss. */
                 loss_num += (pcount - 1) - packets_count;
+                count ++;
             }
             /* Update the highest sequence number seen so far. */
             packets_count = pcount;
+            count ++;
         }
         else
         {
@@ -94,6 +97,8 @@ int main(int argc, char *argv[])
 	     * Sequence number went backward (or was stationary?!?).
 	     * This counts as an out-of-order packet.
 	     */
+                    count ++;
+
             out_of_order_pkt_num++;
 
             /*
@@ -102,8 +107,10 @@ int main(int argc, char *argv[])
 	     * number gap that was counted as a loss.  So we can take
 	     * away a loss.
 	     */
-            if (loss_num > 0)
+            if (loss_num > 0){
                 loss_num--;
+                count++;
+            }
         }
     }
     close(sockSer);
@@ -115,6 +122,8 @@ int main(int argc, char *argv[])
     // fp = fopen("test.txt", "a");
     // fprintf(fp, "Average loss rate is %.4lf%%\n", aver_loss_rate);
     // fclose(fp);
+    printf("The highest number of packets received is %d\n",packets_count);
+    printf("%d packets have been received\n", count);
     printf("Server: There are %d out-of-order packets,\n The average loss rate is %.4lf%%\n",out_of_order_pkt_num,aver_loss_rate);
 
     return 0;
