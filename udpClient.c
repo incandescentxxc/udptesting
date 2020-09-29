@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     memset(&addrCli, 0, sizeof(addrCli));
     addrCli.sin_family = AF_INET;
     addrCli.sin_port = htons(DEST_PORT);
-    addrCli.sin_addr.s_addr = inet_addr("172.16.33.29");
+    addrCli.sin_addr.s_addr = inet_addr("172.20.1.31");
     int totalen = sizeof(struct sockaddr_in);
 
     socklen_t addrlen = sizeof(struct sockaddr);
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
                 usec = htonl(current.usecs);
                 pcount = htonl(packetsent);
 
-                memcpy(send_buf, &stream_id_nl, sizeof(stream_id));
+                memcpy(send_buf, &stream_id_nl, sizeof(stream_id_nl));
                 memcpy(send_buf + 4, &sec, sizeof(sec));
                 memcpy(send_buf + 8, &usec, sizeof(usec));
                 memcpy(send_buf + 12, &pcount, sizeof(pcount));
@@ -81,6 +81,7 @@ int main(int argc, char *argv[])
             duration[stream_id - 1] = iperf_time_in_secs(&elapsedTime);
             throughput[stream_id - 1] = (double)bytes_sent / (1024 * 1024 * duration[stream_id - 1]);
             printf("Stream %d lasts %.4fs, throughput is %.4fM/s\n", stream_id, duration[stream_id - 1], throughput[stream_id - 1]);
+            usleep(100000);        
         }
         else
         {
@@ -88,7 +89,8 @@ int main(int argc, char *argv[])
             while(packetsent < packets_to_send){
                 int r = 0;
                 char send_buf[SEND_UNIT];
-                memcpy(send_buf, &stream_id, sizeof(stream_id));
+                uint32_t stream_id_nl = htonl(stream_id);
+                memcpy(send_buf, &stream_id_nl, sizeof(stream_id_nl));
                 memset(send_buf + 4, 0, SEND_UNIT - 4);
 
                 r = sendto(sockCli, send_buf, sizeof(send_buf), 0, (struct sockaddr *)&addrCli, totalen);
@@ -97,6 +99,7 @@ int main(int argc, char *argv[])
                     perror("sendto error:");
                     exit(1);
                 }
+                packetsent++;
 
             }
         }
