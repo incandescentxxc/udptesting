@@ -5,6 +5,7 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <stdlib.h>
+#include <errno.h>
 #include "iperf_time.h"
 #define SERV_PORT 8000
 #define RECV_UNIT 1024 // length of packets sent
@@ -73,69 +74,80 @@ int main(int argc, char *argv[])
         int r = recvfrom(sockSer, recvbuf, sizeof(recvbuf), 0, (struct sockaddr *)&addrCli, (socklen_t *)&totalen);
         if (r < 0)
         {
+            if (r == EWOULDBLOCK) // if socket waiting is timeout
+            {
+                break;
+            }
             perror("recv from error:");
             exit(1);
         }
         memcpy(&stream_id, recvbuf, sizeof(stream_id));
         stream_id = ntohl(stream_id);
-        if (stream_id <= num_streams)
+        // if (stream_id <= num_streams)
+        // {
+        memcpy(&sec, recvbuf + 4, sizeof(sec));
+        memcpy(&usec, recvbuf + 8, sizeof(usec));
+        memcpy(&pcount, recvbuf + 12, sizeof(pcount));
+        if (bytes_received[stream_id - 1] == 0)
         {
-            memcpy(&sec, recvbuf + 4, sizeof(sec));
-            memcpy(&usec, recvbuf + 8, sizeof(usec));
-            memcpy(&pcount, recvbuf + 12, sizeof(pcount));
-            if (bytes_received[stream_id - 1] == 0)
+            if (stream_id == 1) // set timeout after receiving the first packet
             {
-                iperf_time_now(&first_arr_time);
-                first_packet[stream_id - 1] = 1;
+                struct timeval timeout;
+                timeout.tv_sec = 5;
+                timeout.tv_usec = 0;
+                setsockopt(sockSer, SOL_SOCKET, SO_RCVTIMEO, (const char *)&timeout, sizeof(timeout));
             }
-            bytes_received[stream_id - 1] += r;
-            sec = ntohl(sec);
-            usec = ntohl(usec);
-            pcount = ntohl(pcount);
-            sent_time.secs = sec;
-            sent_time.usecs = usec;
-            iperf_time_now(&arrival_time);
-            iperf_time_diff(&arrival_time, &sent_time, &temp_time);
-            acc_delay[stream_id - 1] += iperf_time_in_usecs(&temp_time);
-            counter[stream_id - 1]++;
-            if (pcount >= packets_count[stream_id - 1] + 1)
-            {
+            iperf_time_now(&first_arr_time);
+            first_packet[stream_id - 1] = 1;
+        }
+        bytes_received[stream_id - 1] += r;
+        sec = ntohl(sec);
+        usec = ntohl(usec);
+        pcount = ntohl(pcount);
+        sent_time.secs = sec;
+        sent_time.usecs = usec;
+        iperf_time_now(&arrival_time);
+        iperf_time_diff(&arrival_time, &sent_time, &temp_time);
+        acc_delay[stream_id - 1] += iperf_time_in_usecs(&temp_time);
+        counter[stream_id - 1]++;
+        if (pcount >= packets_count[stream_id - 1] + 1)
+        {
 
-                /* Forward, but is there a gap in sequence numbers? */
-                if (pcount > packets_count[stream_id - 1] + 1)
-                {
-                    /* There's a gap so count that as a loss. */
-                    loss_num[stream_id - 1] += (pcount - 1) - packets_count[stream_id - 1];
-                }
-                /* Update the highest sequence number seen so far. */
-                packets_count[stream_id - 1] = pcount;
+            /* Forward, but is there a gap in sequence numbers? */
+            if (pcount > packets_count[stream_id - 1] + 1)
+            {
+                /* There's a gap so count that as a loss. */
+                loss_num[stream_id - 1] += (pcount - 1) - packets_count[stream_id - 1];
             }
-            else
-            {
+            /* Update the highest sequence number seen so far. */
+            packets_count[stream_id - 1] = pcount;
+        }
+        else
+        {
 
-                /* 
+            /* 
 	     * Sequence number went backward (or was stationary?!?).
 	     * This counts as an out-of-order packet.
 	     */
 
-                out_of_order_pkt_num[stream_id - 1]++;
+            out_of_order_pkt_num[stream_id - 1]++;
 
-                /*
+            /*
 	     * If we have lost packets, then the fact that we are now
 	     * seeing an out-of-order packet offsets a prior sequence
 	     * number gap that was counted as a loss.  So we can take
 	     * away a loss.
 	     */
-                if (loss_num[stream_id - 1] > 0)
-                {
-                    loss_num[stream_id - 1]--;
-                }
+            if (loss_num[stream_id - 1] > 0)
+            {
+                loss_num[stream_id - 1]--;
             }
         }
-        else
-        {
-            break; // consider the extra signal stream
-        }
+        // }
+        // else
+        // {
+        //     break; // consider the extra signal stream
+        // }
     }
     close(sockSer);
 
