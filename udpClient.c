@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
                 memcpy(send_buf + 8, &usec, sizeof(usec));
                 memcpy(send_buf + 12, &pcount, sizeof(pcount));
                 memset(send_buf + 16, 0, SEND_UNIT - 16);
-
+                usleep(10);
                 r = sendto(sockCli, send_buf, sizeof(send_buf), 0, (struct sockaddr *)&addrCli, totalen);
                 if (r < 0)
                 {
