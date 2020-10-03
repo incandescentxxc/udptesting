@@ -9,7 +9,8 @@
 #define DEST_PORT 8000
 #define SEND_UNIT 1024 // length of packets sent
 
-// sending a series of packets that are numbered within certain duration
+// COMMAND: ./udpclient [udp_proto] [num_stream] [num_packets]
+
 int main(int argc, char *argv[])
 {
 
@@ -48,8 +49,8 @@ int main(int argc, char *argv[])
 
     if (argc != 1)
     {
-        packets_to_send = atoi(argv[2]); // in packet number
-        num_streams = atoi(argv[3]);
+        num_streams = atoi(argv[2]);
+        packets_to_send = atoi(argv[3]); // in packet number
     }
     int packetsent, stream_id;
     int bytes_sent = packets_to_send * SEND_UNIT;
