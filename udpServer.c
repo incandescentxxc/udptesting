@@ -13,13 +13,23 @@
 int main(int argc, char *argv[])
 {
     int num_streams = 10; // in default receive 10 streams
-    if (argv[1])
+    int proto_id = atoi(argv[1]); // required, protocol id
+    if (argv[2])
     {
-        num_streams = atoi(argv[1]);
+        num_streams = atoi(argv[2]);
     }
-    int df_duration = 5; // in default 3s
+    int df_duration = 5; // in default 5s
     // create file descriptor. declare IPv4, UDP protocol
-    int sockSer = socket(AF_INET, SOCK_DGRAM, 0);
+    int sockSer;
+    switch (proto_id)
+    {
+    case 1: // udp 
+        sockSer = socket(AF_INET, SOCK_DGRAM, 0);
+        break;
+    case 2: // udp lite
+        sockSer = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDPLITE);
+    }
+    
     if (sockSer == -1)
     {
         perror("server socket creation fails: ");
@@ -91,8 +101,6 @@ int main(int argc, char *argv[])
         }
         memcpy(&stream_id, recvbuf, sizeof(stream_id));
         stream_id = ntohl(stream_id);
-        // if (stream_id <= num_streams)
-        // {
         memcpy(&sec, recvbuf + 4, sizeof(sec));
         memcpy(&usec, recvbuf + 8, sizeof(usec));
         memcpy(&pcount, recvbuf + 12, sizeof(pcount));
@@ -146,11 +154,6 @@ int main(int argc, char *argv[])
                 loss_num[stream_id - 1]--;
             }
         }
-        // }
-        // else
-        // {
-        //     break; // consider the extra signal stream
-        // }
     }
     close(sockSer);
 
@@ -158,20 +161,28 @@ int main(int argc, char *argv[])
     double loss_rate;
     int total_loss = 0;
     int total_packets = 0;
+    FILE *fp;
+    if(proto_id == 1)
+        fp = fopen("udp1.txt", "a");
+    else if(proto_id == 2)
+        fp = fopen("udplite1.txt","a");
+    else if(proto_id == 3)
+        fp = fopen("udpfec.txt", "a");
+    fprintf(fp, "Stream number | highest number | number pkt | loss pkt | ooo pkt | loss rate\n");
     for (int i = 0; i < num_streams; i++)
     {
-        loss_rate = (double)loss_num[i] / packets_count[i];
-        printf("Stream number | highest number | number pkt | loss pkt | ooo pkt | loss rate\n");
-        printf("%14.d %16.d %12.d %10.d %9.d %10.3lf\n", i + 1, packets_count[i], counter[i], loss_num[i], out_of_order_pkt_num[i], loss_rate);
+        loss_rate = (double)loss_num[i] / packets_count[i] * 100;
+        fprintf(fp, "%14.d %16.d %12.d %10.d %9.d %9.3lf%%\n", i + 1, packets_count[i], counter[i], loss_num[i], out_of_order_pkt_num[i], loss_rate);
+        // printf("Stream number | highest number | number pkt | loss pkt | ooo pkt | loss rate\n");
+        // printf("%14.d %16.d %12.d %10.d %9.d %9.3lf%%\n", i + 1, packets_count[i], counter[i], loss_num[i], out_of_order_pkt_num[i], loss_rate);
         total_loss += loss_num[i];
         total_packets += packets_count[i];
     }
-    double aver_loss_rate = (double)total_loss / total_packets;
-    // FILE *fp;
-    // fp = fopen("test.txt", "a");
-    // fprintf(fp, "Average loss rate is %.4lf%%\n", aver_loss_rate);
-    // fclose(fp);
-    printf("Server: The average loss rate is %.4lf\n", aver_loss_rate);
+    double aver_loss_rate = (double)total_loss / total_packets * 100;
+    fprintf(fp,"Server: The average loss rate is %.4lf%%\n", aver_loss_rate);
+    fprintf(fp,"----------\n");
+    fclose(fp);
+    // printf("Server: The average loss rate is %.4lf%%\n", aver_loss_rate);
 
     //cleanup
     free(first_packet);
