@@ -12,17 +12,20 @@ class myThread (threading.Thread):
         os.system(self.cmd)
 
 def run_flow(loss_rate, cor_rate, mode):
-    NIC1ip = '172.16.33.29'
-    LOCip = "172.20.26.31"
+    NIC1ip = "192.168.1.133"
+    LOCip = "192.168.1.105"
     NIC1 = 'ens33'
     LOCNIC = 'ens33'
 
-    if(mode == 0):#udp
-        cmd_remote_server_start = 'ssh xxc@' + NIC1ip + ' \"cd ./udptesting && ./udpserver 10\"'
-        cmd_local_addmask = 'sudo tc qdisc add dev ' + LOCNIC + ' root netem loss ' + str(loss_rate)
-        cmd_local_cancelmask = 'sudo tc qdisc del dev ' + LOCNIC+ ' root'
-        cmd_local_cli_send = './udpclient 11'
+    if(mode == 1): #udp
+        cmd_remote_server_start = 'ssh xxc@' + NIC1ip + ' \"cd ./udptesting && ./udpserver 1 10\"'
+        cmd_local_cli_send = './udpclient 1 10 10000'
+    elif(mode == 2): #udpclient
+        cmd_remote_server_start = 'ssh xxc@' + NIC1ip + ' \"cd ./udptesting && ./udpserver 2 10\"'
+        cmd_local_cli_send = './udpclient 2 10 10000'
 
+    cmd_local_addmask = 'sudo tc qdisc add dev ' + LOCNIC + ' root netem loss ' + str(loss_rate)
+    cmd_local_cancelmask = 'sudo tc qdisc del dev ' + LOCNIC+ ' root'
     #flow starts
     
     if(loss_rate != 0): # adjust the corruption rate
@@ -37,7 +40,12 @@ def run_flow(loss_rate, cor_rate, mode):
 
 
 if __name__ == "__main__":
-    run_flow(0.1, 0, 0)
+    for i in range(0, 11, 1):
+        loss_rate = i/2
+        time.sleep(0.5)
+        run_flow(loss_rate, 0, 1)
+        time.sleep(0.5)
+        run_flow(loss_rate, 0, 2)
 
 
 
