@@ -16,10 +16,21 @@ int main(int argc, char *argv[])
     struct iperf_time before, current, elapsedTime;
     int packets_to_send = 100000; // in default set it to 100000
     int num_streams = 10;
-
+    int proto_num = atoi(argv[1]); // required field
     // connect
-    char *server_addr = "172.16.33.29";
-    int sockCli = socket(AF_INET, SOCK_DGRAM, 0);
+    char *server_addr = "192.168.1.133";
+    // choose protocol to use
+    int sockCli;
+    switch (proto_num)
+    {
+    case 1: // normal udp
+        sockCli = socket(AF_INET, SOCK_DGRAM, 0);
+        printf("Default UDP is used\n");
+        break;
+    case 2: // udp lite
+        sockCli = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDPLITE);
+        printf("UDPLite is used\n");
+    }
     if (sockCli == -1)
     {
         perror("Client socket create fail: ");
@@ -37,17 +48,15 @@ int main(int argc, char *argv[])
 
     if (argc != 1)
     {
-        packets_to_send = atoi(argv[1]); // in packet number
-        num_streams = atoi(argv[2]);
+        packets_to_send = atoi(argv[2]); // in packet number
+        num_streams = atoi(argv[3]);
     }
     int packetsent, stream_id;
     int bytes_sent = packets_to_send * SEND_UNIT;
     double *duration = (double *)malloc(num_streams * sizeof(double));
     double *throughput = (double *)malloc(num_streams * sizeof(double));
-    for (stream_id = 1; stream_id < num_streams + 1; stream_id++) // one more stream that marks the end
+    for (stream_id = 1; stream_id < num_streams + 1; stream_id++) 
     {
-        // if (stream_id != num_streams + 1)
-        // {
         printf("Stream %d starts, %d packets to be sent\n", stream_id, packets_to_send);
         iperf_time_now(&before);
         packetsent = 0;
@@ -82,27 +91,6 @@ int main(int argc, char *argv[])
         throughput[stream_id - 1] = (double)bytes_sent / (1024 * 1024 * duration[stream_id - 1]);
         printf("Stream %d lasts %.4fs, throughput is %.4fM/s\n", stream_id, duration[stream_id - 1], throughput[stream_id - 1]);
         usleep(100000);
-        // }
-        // else
-        // {
-        //     packetsent = 0;
-        //     while(packetsent < packets_to_send){
-        //         int r = 0;
-        //         char send_buf[SEND_UNIT];
-        //         uint32_t stream_id_nl = htonl(stream_id);
-        //         memcpy(send_buf, &stream_id_nl, sizeof(stream_id_nl));
-        //         memset(send_buf + 4, 0, SEND_UNIT - 4);
-
-        //         r = sendto(sockCli, send_buf, sizeof(send_buf), 0, (struct sockaddr *)&addrCli, totalen);
-        //         if (r < 0)
-        //         {
-        //             perror("sendto error:");
-        //             exit(1);
-        //         }
-        //         packetsent++;
-
-        //     }
-        // }
     }
     close(sockCli);
 
