@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     int bytes_sent = packets_to_send * SEND_UNIT;
     double *duration = (double *)malloc(num_streams * sizeof(double));
     double *throughput = (double *)malloc(num_streams * sizeof(double));
-    for (stream_id = 1; stream_id < num_streams + 1; stream_id++) 
+    for (stream_id = 1; stream_id < num_streams + 1; stream_id++)
     {
         printf("Stream %d starts, %d packets to be sent\n", stream_id, packets_to_send);
         iperf_time_now(&before);
@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
         while (packetsent < packets_to_send)
         {
             int r;
-            //- Header operation
+            //- Header operation: we set stream id, timestamp, pktid, and occasionally signal for calculating throughput
             char send_buf[SEND_UNIT];
             iperf_time_now(&current);
             ++packetsent;
@@ -78,7 +78,17 @@ int main(int argc, char *argv[])
             memcpy(send_buf + 4, &sec, sizeof(sec));
             memcpy(send_buf + 8, &usec, sizeof(usec));
             memcpy(send_buf + 12, &pcount, sizeof(pcount));
-            memset(send_buf + 16, 0, SEND_UNIT - 16);
+            if (packetsent == packets_to_send * 0.95 || packetsent == packets_to_send * 0.96 || packets_to_send * 0.97)
+            {
+                uint32_t signal = 1;
+                signal = htonl(signal);
+                memcpy(send_buf + 16, &signal, sizeof(signal));
+                memset(send_buf + 20, 0, SEND_UNIT - 20);
+            }
+            else
+            {
+                memset(send_buf + 16, 0, SEND_UNIT - 16);
+            }
             r = sendto(sockCli, send_buf, sizeof(send_buf), 0, (struct sockaddr *)&addrCli, totalen);
             if (r < 0)
             {
