@@ -57,6 +57,7 @@ int main(int argc, char *argv[])
     char recvbuf[RECV_UNIT];
     uint32_t sec, usec, pcount, signal;
     struct iperf_time sent_time, arrival_time, temp_time, first_arr_time;
+    double transit, d;
     iperf_time_now(&first_arr_time);
     iperf_time_now(&arrival_time);
     iperf_time_diff(&arrival_time, &first_arr_time, &temp_time);
@@ -70,6 +71,7 @@ int main(int argc, char *argv[])
     /* this delay needs sync clock, but not needed for now*/
     uint64_t *acc_delay = (uint64_t *)malloc(num_streams * sizeof(uint64_t)); // total delay accumulated for each stream
     double *throughputs = (double *)malloc(num_streams * sizeof(double));
+    double *prev_transit = (double *)malloc(num_streams * sizeof(double));
     double *jitters = (double *)malloc(num_streams * sizeof(double));
     for (int i = 0; i < num_streams; i++)
     {
@@ -81,6 +83,7 @@ int main(int argc, char *argv[])
         bytes_received[i] = 0;
         acc_delay[i] = 0;
         throughputs[i] = 0;
+        prev_transit[i] = 0;
         jitters[i] = 0;
     }
     if (stream_id == 1) // set timeout for the recv socket
@@ -130,9 +133,6 @@ int main(int argc, char *argv[])
         }
         sent_time.secs = sec;
         sent_time.usecs = usec;
-        iperf_time_now(&arrival_time);
-        iperf_time_diff(&arrival_time, &sent_time, &temp_time); // needs sync between client and server
-        acc_delay[stream_id - 1] += iperf_time_in_usecs(&temp_time);
         if (pcount >= packets_count[stream_id - 1] + 1)
         {
 
@@ -147,7 +147,6 @@ int main(int argc, char *argv[])
         }
         else
         {
-
             /* 
 	     * Sequence number went backward (or was stationary?!?).
 	     * This counts as an out-of-order packet.
@@ -166,6 +165,32 @@ int main(int argc, char *argv[])
                 loss_num[stream_id - 1]--;
             }
         }
+
+            /*
+        * jitter measurement
+        *
+        * This computation is based on RFC 1889 (specifically
+        * sections 6.3.1 and A.8).
+        *
+        * Note that synchronized clocks are not required since
+        * the source packet delta times are known.  Also this
+        * computation does not require knowing the round-trip
+        * time.
+        */
+        iperf_time_now(&arrival_time);
+        iperf_time_diff(&arrival_time, &sent_time, &temp_time); // needs sync between client and server
+        acc_delay[stream_id - 1] += iperf_time_in_usecs(&temp_time);
+        transit = iperf_time_in_secs(&temp_time);
+
+        /* Hack to handle the first packet by initializing prev_transit. */
+        if (first_packet[stream_id - 1])
+            prev_transit[stream_id - 1] = transit;
+
+        d = transit - prev_transit[stream_id - 1];
+        if (d < 0)
+            d = -d;
+        prev_transit[stream_id - 1] = transit;
+        jitters[stream_id - 1] += (d - jitters[stream_id - 1]) / 16.0;
     }
     close(sockSer);
 
@@ -175,6 +200,7 @@ int main(int argc, char *argv[])
     int total_packets = 0;
     double total_throughputs = 0;
     double total_delay = 0;
+    double total_jitter = 0;
     int valid_streams = 0;
     FILE *fp;
     if (proto_id == 1)
@@ -183,29 +209,33 @@ int main(int argc, char *argv[])
         fp = fopen("udplite1.txt", "a");
     else if (proto_id == 3)
         fp = fopen("udpfec.txt", "a");
-    fprintf(fp, "Stream number | highest number | number pkt | loss pkt | ooo pkt | loss rate | throughput | delay |\n");
+    fprintf(fp, "Stream number | highest number | number pkt | loss pkt | ooo pkt | loss rate | throughput | delay | jitter |\n");
     for (int i = 0; i < num_streams; i++)
     {
         loss_rate = (double)loss_num[i] / packets_count[i] * 100;
         delay_per_stream = acc_delay[i] / (counter[i] * 1000); // ms
-        fprintf(fp, "%14.d %16.d %12.d %10.d %9.d %10.3lf%% %12.3lfM/s %7.3lfms\n",
-         i + 1, packets_count[i], counter[i], loss_num[i], out_of_order_pkt_num[i], loss_rate, throughputs[i], delay_per_stream);
+        fprintf(fp, "%14.d %16.d %12.d %10.d %9.d %10.3lf%% %12.3lfM/s %7.3lfms %8.3lfms\n",
+                i + 1, packets_count[i], counter[i], loss_num[i], out_of_order_pkt_num[i], loss_rate, throughputs[i], delay_per_stream, jitters[i] * 1000);
         // printf("Stream number | highest number | number pkt | loss pkt | ooo pkt | loss rate\n");
         // printf("%14.d %16.d %12.d %10.d %9.d %9.3lf%%\n", i + 1, packets_count[i], counter[i], loss_num[i], out_of_order_pkt_num[i], loss_rate);
         total_loss += loss_num[i];
         total_packets += packets_count[i];
-        if(throughputs[i]){
+        if (throughputs[i])
+        {
             total_throughputs += throughputs[i];
             valid_streams++;
         }
         total_delay += delay_per_stream;
+        total_jitter += jitters[i];
     }
     double aver_loss_rate = (double)total_loss / total_packets * 100;
     double aver_throuput = total_throughputs / valid_streams;
     double aver_delay = total_delay / num_streams;
+    double aver_jitter = total_jitter / num_streams;
     fprintf(fp, "Server: The average loss rate is %.4lf%%\n", aver_loss_rate);
     fprintf(fp, "Server: The average throughput is %.4lf%%\n", aver_throuput);
     fprintf(fp, "Server: The average delay is %.4lf%%\n", aver_delay);
+    fprintf(fp, "Server: The average jitter is %.4lf%%\n", aver_jitter);
     fprintf(fp, "----------\n");
     fclose(fp);
     // printf("Server: The average loss rate is %.4lf%%\n", aver_loss_rate);
@@ -219,6 +249,7 @@ int main(int argc, char *argv[])
     free(bytes_received);
     free(acc_delay);
     free(throughputs);
+    free(prev_transit);
     free(jitters);
 
     return 0;
