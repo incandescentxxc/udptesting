@@ -61,8 +61,8 @@ int main(int argc, char *argv[])
     iperf_time_now(&first_arr_time);
     iperf_time_now(&arrival_time);
     iperf_time_diff(&arrival_time, &first_arr_time, &temp_time);
+    int first_packet = 0;
     int stream_id = 1;
-    int *first_packet = (int *)malloc(num_streams * sizeof(int));  // indicate whether first packet has been recv for each stream
     int *packets_count = (int *)malloc(num_streams * sizeof(int)); // highest number received so far
     int *loss_num = (int *)malloc(num_streams * sizeof(int));      // lost packet in each stream
     int *out_of_order_pkt_num = (int *)malloc(num_streams * sizeof(int));
@@ -75,7 +75,6 @@ int main(int argc, char *argv[])
     double *jitters = (double *)malloc(num_streams * sizeof(double));
     for (int i = 0; i < num_streams; i++)
     {
-        first_packet[i] = 0;
         packets_count[i] = 0;
         loss_num[i] = 0;
         out_of_order_pkt_num[i] = 0;
@@ -107,24 +106,26 @@ int main(int argc, char *argv[])
             exit(1);
         }
         memcpy(&stream_id, recvbuf, sizeof(stream_id));
+        stream_id = ntohl(stream_id);
+        first_packet = 0; // to mark whether the packet is the first one
+        if (bytes_received[stream_id - 1] == 0) // start of the each stream
+        {
+            printf("stream id %d\n", stream_id);
+            iperf_time_now(&first_arr_time);
+            first_packet = 1;
+        }
         memcpy(&sec, recvbuf + 4, sizeof(sec));
         memcpy(&usec, recvbuf + 8, sizeof(usec));
         memcpy(&pcount, recvbuf + 12, sizeof(pcount));
         memcpy(&signal, recvbuf + 16, sizeof(signal));
-        stream_id = ntohl(stream_id);
         sec = ntohl(sec);
         usec = ntohl(usec);
         pcount = ntohl(pcount);
         signal = ntohl(signal);
         bytes_received[stream_id - 1] += r;
         counter[stream_id - 1]++;
-        if (bytes_received[stream_id - 1] == 0) // start of the each stream
-        {
-            printf("stream id %d\n", stream_id);
-            iperf_time_now(&first_arr_time);
-            first_packet[stream_id - 1] = 1;
-        }
-        if (signal && !throughputs[stream_id] - 1)
+
+        if (signal)
         { // if the signal pkts are lost, the corresponding throughputs[i] would be 0
             iperf_time_now(&arrival_time);
             iperf_time_diff(&arrival_time, &first_arr_time, &temp_time);
@@ -183,7 +184,7 @@ int main(int argc, char *argv[])
         transit = iperf_time_in_secs(&temp_time);
 
         /* Hack to handle the first packet by initializing prev_transit. */
-        if (first_packet[stream_id - 1])
+        if (first_packet)
             prev_transit[stream_id - 1] = transit;
 
         d = transit - prev_transit[stream_id - 1];
@@ -214,7 +215,7 @@ int main(int argc, char *argv[])
     {
         loss_rate = (double)loss_num[i] / packets_count[i] * 100;
         delay_per_stream = acc_delay[i] / (counter[i] * 1000); // ms
-        fprintf(fp, "%14.d %16.d %12.d %10.d %9.d %10.3lf%% %12.3lfM/s %7.3lfms %8.3lfms\n",
+        fprintf(fp, "%14.d %16.d %12.d %10.d %9.d %10.3lf%% %10.3lfM/s %5.3lfms %6.3lfms\n",
                 i + 1, packets_count[i], counter[i], loss_num[i], out_of_order_pkt_num[i], loss_rate, throughputs[i], delay_per_stream, jitters[i] * 1000);
         // printf("Stream number | highest number | number pkt | loss pkt | ooo pkt | loss rate\n");
         // printf("%14.d %16.d %12.d %10.d %9.d %9.3lf%%\n", i + 1, packets_count[i], counter[i], loss_num[i], out_of_order_pkt_num[i], loss_rate);
@@ -231,17 +232,16 @@ int main(int argc, char *argv[])
     double aver_loss_rate = (double)total_loss / total_packets * 100;
     double aver_throuput = total_throughputs / valid_streams;
     double aver_delay = total_delay / num_streams;
-    double aver_jitter = total_jitter / num_streams;
+    double aver_jitter = total_jitter / num_streams *1000; //ms
     fprintf(fp, "Server: The average loss rate is %.4lf%%\n", aver_loss_rate);
-    fprintf(fp, "Server: The average throughput is %.4lf%%\n", aver_throuput);
-    fprintf(fp, "Server: The average delay is %.4lf%%\n", aver_delay);
-    fprintf(fp, "Server: The average jitter is %.4lf%%\n", aver_jitter);
+    fprintf(fp, "Server: The average throughput is %.4lfM/s\n", aver_throuput);
+    fprintf(fp, "Server: The average delay is %.4lfms\n", aver_delay);
+    fprintf(fp, "Server: The average jitter is %.4lfms\n", aver_jitter);
     fprintf(fp, "----------\n");
     fclose(fp);
     // printf("Server: The average loss rate is %.4lf%%\n", aver_loss_rate);
 
     //cleanup
-    free(first_packet);
     free(packets_count);
     free(loss_num);
     free(out_of_order_pkt_num);
