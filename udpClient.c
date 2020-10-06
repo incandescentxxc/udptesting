@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
             memcpy(send_buf + 4, &sec, sizeof(sec));
             memcpy(send_buf + 8, &usec, sizeof(usec));
             memcpy(send_buf + 12, &pcount, sizeof(pcount));
-            if (packetsent == packets_to_send * 0.95 || packetsent == packets_to_send * 0.96 || packets_to_send * 0.97)
+            if (packetsent == (packets_to_send - 100) || packetsent == (packets_to_send - 10) || packetsent == (packets_to_send - 1))
             {
                 uint32_t signal = 1;
                 signal = htonl(signal);
