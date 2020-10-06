@@ -251,6 +251,7 @@ int main(int argc, char *argv[])
     free(throughputs);
     free(prev_transit);
     free(jitters);
+    printf("Server Exiting\n");
 
     return 0;
 }
