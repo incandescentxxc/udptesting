@@ -13,9 +13,9 @@ class myThread (threading.Thread):
 
 def run_flow(loss_rate, cor_rate, mode):
     NIC1ip = "192.168.1.133"
-    LOCip = "192.168.1.105"
-    NIC1 = 'ens33'
-    LOCNIC = 'ens33'
+    LOCip = "192.168.1.115"
+    NIC1 = 'ens38'
+    LOCNIC = 'ens35'
 
     if(mode == 1): #udp
         cmd_remote_server_start = 'ssh xxc@' + NIC1ip + ' \"cd ./udptesting && ./udpserver 1 10\"'
@@ -24,7 +24,7 @@ def run_flow(loss_rate, cor_rate, mode):
         cmd_remote_server_start = 'ssh xxc@' + NIC1ip + ' \"cd ./udptesting && ./udpserver 2 10\"'
         cmd_local_cli_send = './udpclient 2 10 10000'
 
-    cmd_local_addmask = 'sudo tc qdisc add dev ' + LOCNIC + ' root netem loss ' + str(loss_rate)
+    cmd_local_addmask = 'sudo tc qdisc add dev ' + LOCNIC + ' root netem corrupt ' + str(loss_rate)
     cmd_local_cancelmask = 'sudo tc qdisc del dev ' + LOCNIC+ ' root'
     #flow starts
     
@@ -38,14 +38,13 @@ def run_flow(loss_rate, cor_rate, mode):
         os.system(cmd_local_cancelmask)
     thread_remote.join()
 
-
 if __name__ == "__main__":
     for i in range(0, 11, 1):
         loss_rate = i/2
         time.sleep(0.5)
         run_flow(loss_rate, 0, 1)
         time.sleep(0.5)
-        run_flow(loss_rate, 0, 2)
+        # run_flow(loss_rate, 0, 2)
 
 
 

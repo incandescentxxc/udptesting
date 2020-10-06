@@ -9,7 +9,13 @@
 #include "iperf_time.h"
 #define SERV_PORT 8000
 #define RECV_UNIT 1024 // length of packets sent
+// FOR UDPLITE
+#define SOL_UDPLITE 136
+#define UDPLITE_SEND_CSCOV 10
+#define UDPLITE_RECV_CSCOV 11
 
+
+// COMMAND: ./udpserver [udp_proto] [num_stream]
 int main(int argc, char *argv[])
 {
     int num_streams = 10;         // in default receive 10 streams
@@ -28,6 +34,9 @@ int main(int argc, char *argv[])
         break;
     case 2: // udp lite
         sockSer = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDPLITE);
+        int checksum_cover = 28; // (12 pseudo header) + 8 bytes header + 20 bytes data that are used
+        setsockopt(sockSer, SOL_UDPLITE, UDPLITE_RECV_CSCOV, &checksum_cover, sizeof(checksum_cover));
+        break;
     }
 
     if (sockSer == -1)

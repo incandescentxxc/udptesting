@@ -8,6 +8,11 @@
 #include "iperf_time.h"
 #define DEST_PORT 8000
 #define SEND_UNIT 1024 // length of packets sent
+// FOR UDPLITE
+#define SOL_UDPLITE 136
+#define UDPLITE_SEND_CSCOV 10
+#define UDPLITE_RECV_CSCOV 11
+
 
 // COMMAND: ./udpclient [udp_proto] [num_stream] [num_packets]
 
@@ -31,6 +36,9 @@ int main(int argc, char *argv[])
     case 2: // udp lite
         sockCli = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDPLITE);
         printf("UDPLite is used\n");
+        int checksum_cover = 28; // (12 pseudo header) + 8 bytes header + 20 bytes data that are used
+        setsockopt(sockCli, SOL_UDPLITE, UDPLITE_SEND_CSCOV, &checksum_cover, sizeof(checksum_cover));
+        break;
     }
     if (sockCli == -1)
     {
