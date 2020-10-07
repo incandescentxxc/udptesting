@@ -214,9 +214,9 @@ int main(int argc, char *argv[])
     int valid_streams = 0;
     FILE *fp;
     if (proto_id == 1)
-        fp = fopen("udp1.txt", "a");
+        fp = fopen("udp.txt", "a");
     else if (proto_id == 2)
-        fp = fopen("udplite1.txt", "a");
+        fp = fopen("udplite.txt", "a");
     else if (proto_id == 3)
         fp = fopen("udpfec.txt", "a");
     fprintf(fp, "Stream number | highest number | number pkt | loss pkt | ooo pkt | loss rate | throughput | delay | jitter |\n");
