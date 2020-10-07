@@ -1,0 +1,304 @@
+Stream number | highest number | number pkt | loss pkt | ooo pkt | loss rate | throughput | delay | jitter |
+             1            10000        10000                           0.000%     24.434M/s 0.000ms  0.106ms
+             2            10000        10000                           0.000%     23.619M/s 0.000ms  0.057ms
+             3            10000        10000                           0.000%     24.862M/s 0.000ms  0.255ms
+             4            10000        10000                           0.000%     23.676M/s 0.000ms  0.053ms
+             5            10000        10000                           0.000%     22.965M/s 0.000ms  0.139ms
+             6            10000        10000                           0.000%     24.119M/s 0.000ms  0.050ms
+             7            10000        10000                           0.000%     24.634M/s 0.000ms  0.104ms
+             8            10000        10000                           0.000%     24.741M/s 0.000ms  0.059ms
+             9            10000        10000                           0.000%     25.501M/s 0.000ms  0.176ms
+            10            10000        10000                           0.000%     25.285M/s 0.000ms  0.191ms
+Server: The average loss rate is 0.0000%
+Server: The average throughput is 24.3836M/s
+Server: The average delay is 0.0000ms
+Server: The average jitter is 0.1190ms
+----------
+Stream number | highest number | number pkt | loss pkt | ooo pkt | loss rate | throughput | delay | jitter |
+             1            10000         9999          1                0.010%     19.509M/s 0.000ms  0.178ms
+             2            10000         9996          4                0.040%     24.278M/s 0.000ms  0.172ms
+             3            10000        10000                           0.000%     23.344M/s 0.000ms  0.274ms
+             4            10000         9999          1                0.010%     24.114M/s 0.000ms  0.147ms
+             5            10000        10000                           0.000%     25.180M/s 0.000ms  0.144ms
+             6            10000         9999          1                0.010%     25.935M/s 0.000ms  0.264ms
+             7            10000         9999          1                0.010%     25.056M/s 0.000ms  0.068ms
+             8            10000         9997          3                0.030%     23.569M/s 1.000ms  0.140ms
+             9            10000         9999          1                0.010%     25.612M/s 1.000ms  0.061ms
+            10            10000         9997          3                0.030%     23.374M/s 2.000ms  0.070ms
+Server: The average loss rate is 0.0150%
+Server: The average throughput is 23.9971M/s
+Server: The average delay is 0.4000ms
+Server: The average jitter is 0.1517ms
+----------
+Stream number | highest number | number pkt | loss pkt | ooo pkt | loss rate | throughput | delay | jitter |
+             1            10000         9994          6                0.060%     24.670M/s 1.000ms  0.052ms
+             2            10000         9995          5                0.050%     25.684M/s 1.000ms  0.298ms
+             3            10000         9995          5                0.050%     24.469M/s 1.000ms  0.058ms
+             4            10000         9992          8                0.080%     25.471M/s 2.000ms  0.185ms
+             5            10000         9996          4                0.040%     24.673M/s 1.000ms  0.059ms
+             6            10000         9998          2                0.020%     26.084M/s 1.000ms  0.070ms
+             7            10000         9995          5                0.050%     25.370M/s 1.000ms  0.046ms
+             8            10000         9996          4                0.040%     25.987M/s 1.000ms  0.040ms
+             9            10000         9993          7                0.070%     26.225M/s 1.000ms  0.159ms
+            10            10000         9996          4                0.040%     23.657M/s 1.000ms  0.052ms
+Server: The average loss rate is 0.0500%
+Server: The average throughput is 25.2289M/s
+Server: The average delay is 1.1000ms
+Server: The average jitter is 0.1019ms
+----------
+Stream number | highest number | number pkt | loss pkt | ooo pkt | loss rate | throughput | delay | jitter |
+             1            10000         9993          7                0.070%     24.392M/s 1.000ms  0.180ms
+             2            10000         9991          9                0.090%     23.697M/s 1.000ms  0.064ms
+             3            10000         9990         10                0.100%     25.822M/s 1.000ms  0.060ms
+             4            10000         9994          6                0.060%     21.807M/s 1.000ms  0.179ms
+             5            10000         9992          8                0.080%     24.665M/s 1.000ms  0.063ms
+             6            10000         9992          8                0.080%     25.411M/s 1.000ms  0.061ms
+             7            10000         9997          3                0.030%     24.558M/s 1.000ms  0.057ms
+             8            10000         9994          6                0.060%     25.344M/s 1.000ms  0.155ms
+             9            10000         9992          8                0.080%     24.490M/s 1.000ms  0.077ms
+            10            10000         9994          6                0.060%     26.809M/s 1.000ms  0.043ms
+Server: The average loss rate is 0.0710%
+Server: The average throughput is 24.6995M/s
+Server: The average delay is 1.0000ms
+Server: The average jitter is 0.0939ms
+----------
+Stream number | highest number | number pkt | loss pkt | ooo pkt | loss rate | throughput | delay | jitter |
+             1            10000         9986         14                0.140%     25.415M/s 1.000ms  0.164ms
+             2            10000         9992          8                0.080%     23.047M/s 1.000ms  0.062ms
+             3            10000         9991          9                0.090%     24.714M/s 1.000ms  0.144ms
+             4            10000         9996          4                0.040%     22.987M/s 1.000ms  0.177ms
+             5            10000         9986         14                0.140%     25.020M/s 0.000ms  0.060ms
+             6            10000         9989         11                0.110%     25.092M/s 1.000ms  0.244ms
+             7            10000         9991          9                0.090%     25.855M/s 1.000ms  0.058ms
+             8            10000         9997          3                0.030%     24.060M/s 0.000ms  0.085ms
+             9            10000         9987         13                0.130%     25.408M/s 0.000ms  0.190ms
+            10            10000         9994          6                0.060%     26.785M/s 0.000ms  0.071ms
+Server: The average loss rate is 0.0910%
+Server: The average throughput is 24.8383M/s
+Server: The average delay is 0.6000ms
+Server: The average jitter is 0.1253ms
+----------
+Stream number | highest number | number pkt | loss pkt | ooo pkt | loss rate | throughput | delay | jitter |
+             1            10000         9989         11                0.110%     22.658M/s 1.000ms  0.217ms
+             2            10000         9987         13                0.130%     26.272M/s 0.000ms  0.072ms
+             3            10000         9987         13                0.130%     25.082M/s 0.000ms  0.207ms
+             4            10000         9983         17                0.170%     25.078M/s 0.000ms  0.058ms
+             5            10000         9987         13                0.130%     25.142M/s 1.000ms  0.049ms
+             6            10000         9987         13                0.130%     24.598M/s 1.000ms  0.055ms
+             7            10000         9985         15                0.150%     25.437M/s 1.000ms  0.051ms
+             8            10000         9980         20                0.200%     25.263M/s 1.000ms  0.061ms
+             9            10000         9976         24                0.240%     24.971M/s 1.000ms  0.133ms
+            10            10000         9992          8                0.080%     23.913M/s 1.000ms  0.044ms
+Server: The average loss rate is 0.1470%
+Server: The average throughput is 24.8415M/s
+Server: The average delay is 0.7000ms
+Server: The average jitter is 0.0948ms
+----------
+Stream number | highest number | number pkt | loss pkt | ooo pkt | loss rate | throughput | delay | jitter |
+             1            10000         9985         15                0.150%     23.028M/s 1.000ms  0.056ms
+             2            10000         9982         18                0.180%     25.685M/s 1.000ms  0.174ms
+             3            10000         9985         15                0.150%     23.206M/s 1.000ms  0.031ms
+             4            10000         9986         14                0.140%     26.471M/s 1.000ms  0.046ms
+             5            10000         9987         13                0.130%     23.999M/s 1.000ms  0.180ms
+             6            10000         9983         17                0.170%     24.917M/s 1.000ms  0.043ms
+             7            10000         9984         16                0.160%     26.606M/s 2.000ms  0.125ms
+             8            10000         9983         17                0.170%     26.245M/s 1.000ms  0.056ms
+             9            10000         9984         16                0.160%     26.897M/s 2.000ms  0.046ms
+            10            10000         9980         20                0.200%     24.406M/s 1.000ms  0.147ms
+Server: The average loss rate is 0.1610%
+Server: The average throughput is 25.1460M/s
+Server: The average delay is 1.2000ms
+Server: The average jitter is 0.0905ms
+----------
+Stream number | highest number | number pkt | loss pkt | ooo pkt | loss rate | throughput | delay | jitter |
+             1            10000         9974         26                0.260%     25.689M/s 0.000ms  0.045ms
+             2            10000         9979         21                0.210%     27.328M/s 0.000ms  0.048ms
+             3            10000         9983         17                0.170%     24.820M/s 1.000ms  0.211ms
+             4            10000         9980         20                0.200%     25.333M/s 1.000ms  0.059ms
+             5            10000         9979         21                0.210%     25.041M/s 1.000ms  0.097ms
+             6            10000         9984         16                0.160%     28.016M/s 2.000ms  0.047ms
+             7            10000         9985         15                0.150%     25.008M/s 1.000ms  0.068ms
+             8            10000         9979         21                0.210%     26.286M/s 1.000ms  0.046ms
+             9            10000         9985         15                0.150%     25.108M/s 1.000ms  0.066ms
+            10            10000         9980         20                0.200%     24.127M/s 1.000ms  0.139ms
+Server: The average loss rate is 0.1920%
+Server: The average throughput is 25.6756M/s
+Server: The average delay is 0.9000ms
+Server: The average jitter is 0.0825ms
+----------
+Stream number | highest number | number pkt | loss pkt | ooo pkt | loss rate | throughput | delay | jitter |
+             1            10000         9650        350                3.500%     24.312M/s 0.000ms  0.049ms
+             2            10000         9985         15                0.150%     25.975M/s 0.000ms  0.044ms
+             3            10000         9971         29                0.290%     24.953M/s 1.000ms  0.130ms
+             4            10000         9981         19                0.190%     24.859M/s 1.000ms  0.186ms
+             5            10000         9982         18                0.180%     24.114M/s 0.000ms  0.062ms
+             6            10000         9983         17                0.170%     25.162M/s 1.000ms  0.135ms
+             7            10000         9968         32                0.320%     25.492M/s 1.000ms  0.085ms
+             8            10000         9982         18                0.180%     25.070M/s 1.000ms  0.045ms
+             9            10000         9979         21                0.210%     25.227M/s 1.000ms  0.148ms
+            10            10000         9978         22                0.220%     23.943M/s 1.000ms  0.075ms
+Server: The average loss rate is 0.5410%
+Server: The average throughput is 24.9106M/s
+Server: The average delay is 0.7000ms
+Server: The average jitter is 0.0959ms
+----------
+Stream number | highest number | number pkt | loss pkt | ooo pkt | loss rate | throughput | delay | jitter |
+             1            10000         9970         30                0.300%     25.162M/s 1.000ms  0.188ms
+             2            10000         9979         21                0.210%     24.893M/s 1.000ms  0.048ms
+             3            10000         9981         19                0.190%     24.585M/s 1.000ms  0.048ms
+             4            10000         9980         20                0.200%     25.782M/s 1.000ms  0.073ms
+             5            10000         9979         21                0.210%     23.883M/s 1.000ms  0.165ms
+             6            10000         9983         17                0.170%     25.272M/s 1.000ms  0.115ms
+             7            10000         9978         22                0.220%     24.406M/s 1.000ms  0.159ms
+             8            10000         9981         19                0.190%     24.237M/s 1.000ms  0.094ms
+             9            10000         9978         22                0.220%     24.299M/s 1.000ms  0.233ms
+            10            10000         9972         28                0.280%     25.484M/s 1.000ms  0.117ms
+Server: The average loss rate is 0.2190%
+Server: The average throughput is 24.8003M/s
+Server: The average delay is 1.0000ms
+Server: The average jitter is 0.1240ms
+----------
+Stream number | highest number | number pkt | loss pkt | ooo pkt | loss rate | throughput | delay | jitter |
+             1            10000         9976         24                0.240%     25.254M/s 1.000ms  0.192ms
+             2            10000         9980         20                0.200%     21.993M/s 1.000ms  0.055ms
+             3            10000         9979         21                0.210%     25.295M/s 1.000ms  0.055ms
+             4            10000         9969         31                0.310%     20.998M/s 1.000ms  0.201ms
+             5            10000         9964         36                0.360%     24.518M/s 1.000ms  0.282ms
+             6            10000         9984         16                0.160%     22.031M/s 1.000ms  0.073ms
+             7            10000         9979         21                0.210%     26.339M/s 1.000ms  0.062ms
+             8            10000         9979         21                0.210%     23.922M/s 1.000ms  0.257ms
+             9            10000         9979         21                0.210%     25.660M/s 1.000ms  0.263ms
+            10            10000         9979         21                0.210%     23.463M/s 1.000ms  0.114ms
+Server: The average loss rate is 0.2320%
+Server: The average throughput is 23.9475M/s
+Server: The average delay is 1.0000ms
+Server: The average jitter is 0.1554ms
+----------
+Stream number | highest number | number pkt | loss pkt | ooo pkt | loss rate | throughput | delay | jitter |
+             1            10000         9971         29                0.290%     24.316M/s 1.000ms  0.053ms
+             2            10000         9965         35                0.350%     24.363M/s 1.000ms  0.073ms
+             3            10000         9973         27                0.270%     24.633M/s 0.000ms  0.050ms
+             4            10000         9971         29                0.290%     25.799M/s 0.000ms  0.055ms
+             5            10000         9966         34                0.340%     23.935M/s 1.000ms  0.084ms
+             6            10000         9974         26                0.260%     25.910M/s 0.000ms  0.067ms
+             7            10000         9972         28                0.280%     23.860M/s 0.000ms  0.271ms
+             8            10000         9970         30                0.300%     24.270M/s 0.000ms  0.128ms
+             9            10000         9968         32                0.320%     22.895M/s 1.000ms  0.111ms
+            10            10000         9961         39                0.390%     24.034M/s 1.000ms  0.173ms
+Server: The average loss rate is 0.3090%
+Server: The average throughput is 24.4016M/s
+Server: The average delay is 0.5000ms
+Server: The average jitter is 0.1065ms
+----------
+Stream number | highest number | number pkt | loss pkt | ooo pkt | loss rate | throughput | delay | jitter |
+             1            10000         9966         34                0.340%     23.330M/s 1.000ms  0.189ms
+             2            10000         9969         31                0.310%     21.553M/s 1.000ms  0.032ms
+             3            10000         9965         35                0.350%     22.165M/s 1.000ms  0.062ms
+             4            10000         9970         30                0.300%     22.324M/s 1.000ms  0.060ms
+             5            10000         9963         37                0.370%     25.163M/s 1.000ms  0.234ms
+             6            10000         9963         37                0.370%     24.021M/s 1.000ms  0.179ms
+             7            10000         9977         23                0.230%     25.357M/s 1.000ms  0.062ms
+             8            10000         9962         38                0.380%     23.643M/s 1.000ms  0.049ms
+             9            10000         9972         28                0.280%     23.847M/s 1.000ms  0.066ms
+            10            10000         9969         31                0.310%     23.293M/s 1.000ms  0.211ms
+Server: The average loss rate is 0.3240%
+Server: The average throughput is 23.4695M/s
+Server: The average delay is 1.0000ms
+Server: The average jitter is 0.1145ms
+----------
+Stream number | highest number | number pkt | loss pkt | ooo pkt | loss rate | throughput | delay | jitter |
+             1            10000         9959         41                0.410%     23.213M/s 1.000ms  0.047ms
+             2            10000         9963         37                0.370%     23.450M/s 1.000ms  0.182ms
+             3            10000         9964         36                0.360%     22.209M/s 1.000ms  0.192ms
+             4            10000         9963         37                0.370%     23.078M/s 1.000ms  0.152ms
+             5            10000         9954         46                0.460%     20.338M/s 1.000ms  0.054ms
+             6            10000         9958         42                0.420%     24.407M/s 1.000ms  0.053ms
+             7            10000         9960         40                0.400%     23.748M/s 1.000ms  0.175ms
+             8            10000         9961         39                0.390%     25.238M/s 1.000ms  0.050ms
+             9            10000         9962         38                0.380%     24.469M/s 1.000ms  0.071ms
+            10            10000         9961         39                0.390%     25.616M/s 1.000ms  0.155ms
+Server: The average loss rate is 0.3950%
+Server: The average throughput is 23.5765M/s
+Server: The average delay is 1.0000ms
+Server: The average jitter is 0.1130ms
+----------
+Stream number | highest number | number pkt | loss pkt | ooo pkt | loss rate | throughput | delay | jitter |
+             1            10000         9959         41                0.410%     23.068M/s 1.000ms  0.164ms
+             2            10000         9966         34                0.340%     23.787M/s 1.000ms  0.066ms
+             3            10000         9964         36                0.360%     26.672M/s 1.000ms  0.048ms
+             4            10000         9965         35                0.350%     20.471M/s 1.000ms  0.235ms
+             5            10000         9963         37                0.370%     26.333M/s 1.000ms  0.044ms
+             6            10000         9958         42                0.420%     24.205M/s 1.000ms  0.180ms
+             7            10000         9964         36                0.360%     23.872M/s 1.000ms  0.064ms
+             8            10000         9958         42                0.420%     24.938M/s 1.000ms  0.195ms
+             9            10000         9957         43                0.430%     24.604M/s 1.000ms  0.046ms
+            10            10000         9960         40                0.400%     25.224M/s 1.000ms  0.042ms
+Server: The average loss rate is 0.3860%
+Server: The average throughput is 24.3173M/s
+Server: The average delay is 1.0000ms
+Server: The average jitter is 0.1084ms
+----------
+Stream number | highest number | number pkt | loss pkt | ooo pkt | loss rate | throughput | delay | jitter |
+             1            10000         9962         38                0.380%     25.663M/s 0.000ms  0.054ms
+             2            10000         9960         40                0.400%     22.185M/s 0.000ms  0.129ms
+             3            10000         9956         44                0.440%     24.032M/s 0.000ms  0.080ms
+             4            10000         9959         41                0.410%     23.392M/s 0.000ms  0.183ms
+             5            10000         9953         47                0.470%     25.329M/s 1.000ms  0.189ms
+             6            10000         9963         37                0.370%     23.679M/s 0.000ms  0.043ms
+             7            10000         9959         41                0.410%     26.196M/s 0.000ms  0.138ms
+             8            10000         9965         35                0.350%     25.013M/s 0.000ms  0.058ms
+             9            10000         9954         46                0.460%     25.807M/s 1.000ms  0.150ms
+            10            10000         9964         36                0.360%     25.852M/s 1.000ms  0.130ms
+Server: The average loss rate is 0.4050%
+Server: The average throughput is 24.7148M/s
+Server: The average delay is 0.3000ms
+Server: The average jitter is 0.1155ms
+----------
+Stream number | highest number | number pkt | loss pkt | ooo pkt | loss rate | throughput | delay | jitter |
+             1            10000         9777        223                2.230%     23.881M/s 1.000ms  0.043ms
+             2            10000         9952         48                0.480%     25.378M/s 1.000ms  0.032ms
+             3            10000         9938         62                0.620%     24.840M/s 1.000ms  0.280ms
+             4            10000         9954         46                0.460%     25.697M/s 0.000ms  0.049ms
+             5            10000         9950         50                0.500%     22.817M/s 1.000ms  0.172ms
+             6            10000         9936         64                0.640%     25.273M/s 1.000ms  0.264ms
+             7            10000         9943         57                0.570%     22.284M/s 0.000ms  0.053ms
+             8            10000         9953         47                0.470%     23.201M/s 0.000ms  0.036ms
+             9            10000         9951         49                0.490%     20.895M/s 1.000ms  0.138ms
+            10            10000         9963         37                0.370%     25.197M/s 0.000ms  0.080ms
+Server: The average loss rate is 0.6830%
+Server: The average throughput is 23.9464M/s
+Server: The average delay is 0.6000ms
+Server: The average jitter is 0.1146ms
+----------
+Stream number | highest number | number pkt | loss pkt | ooo pkt | loss rate | throughput | delay | jitter |
+             1            10000         9950         50                0.500%     23.840M/s 0.000ms  0.037ms
+             2            10000         9958         42                0.420%     22.670M/s 1.000ms  0.060ms
+             3            10000         9947         53                0.530%     23.427M/s 0.000ms  0.206ms
+             4            10000         9940         60                0.600%     23.255M/s 1.000ms  0.044ms
+             5            10000         9952         48                0.480%     24.830M/s 0.000ms  0.211ms
+             6            10000         9955         45                0.450%     24.752M/s 0.000ms  0.055ms
+             7            10000         9956         44                0.440%     24.455M/s 0.000ms  0.080ms
+             8            10000         9956         44                0.440%     25.520M/s 0.000ms  0.060ms
+             9            10000         9951         49                0.490%     23.575M/s 0.000ms  0.059ms
+            10            10000         9946         54                0.540%     25.553M/s 1.000ms  0.172ms
+Server: The average loss rate is 0.4890%
+Server: The average throughput is 24.1876M/s
+Server: The average delay is 0.3000ms
+Server: The average jitter is 0.0984ms
+----------
+Stream number | highest number | number pkt | loss pkt | ooo pkt | loss rate | throughput | delay | jitter |
+             1            10000         9948         52                0.520%     24.034M/s 0.000ms  0.051ms
+             2            10000         9948         52                0.520%     25.034M/s 0.000ms  0.053ms
+             3            10000         9946         54                0.540%     23.283M/s 0.000ms  0.136ms
+             4            10000         9942         58                0.580%     24.555M/s 1.000ms  0.054ms
+             5            10000         9944         56                0.560%     24.944M/s 0.000ms  0.150ms
+             6            10000         9946         54                0.540%     24.346M/s 0.000ms  0.149ms
+             7            10000         9952         48                0.480%     24.632M/s 0.000ms  0.213ms
+             8            10000         9948         52                0.520%     23.986M/s 1.000ms  0.180ms
+             9            10000         9951         49                0.490%     25.204M/s 1.000ms  0.146ms
+            10             9999         9935         64                0.640%     23.527M/s 1.000ms  0.091ms
+Server: The average loss rate is 0.5390%
+Server: The average throughput is 24.3546M/s
+Server: The average delay is 0.4000ms
+Server: The average jitter is 0.1223ms
+----------

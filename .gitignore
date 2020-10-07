@@ -1,11 +1,11 @@
 *
 !*.c
 !*.h
-!\stat\*.txt
-!\stat\*.csv
 !*.README.md
 !Makefile
 !*.cpp
 !*.py
 !.gitignore
 !\legacy
+!\stat
+!*.txt
