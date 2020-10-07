@@ -1,6 +1,8 @@
 *
 !*.c
 !*.h
+!\stat\*.txt
+!\stat\*.csv
 !*.README.md
 !Makefile
 !*.cpp
