@@ -1,0 +1,5 @@
+
+Average loss rate is 71.7119%Average loss rate is 70.8683%Average loss rate is 67.8334%
+Average loss rate is 75.6131%
+Average loss rate is 77.8359%
+Average loss rate is 84.3831%
